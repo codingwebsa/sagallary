@@ -85,7 +85,7 @@ const CodingwebsaGiftCard = () => (
   </>
 );
 
-export async function getStaticProps(ctx) {
+export async function getServerSideProps(ctx) {
   const session = await getSession(ctx);
   if (!session) {
     return {
