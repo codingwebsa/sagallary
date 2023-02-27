@@ -1,9 +1,9 @@
-import { Bridge } from "@/icons";
+import { Bridge, DownloadIcon } from "@/icons";
 import { getSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import Masonry from "react-masonry-css";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useState } from "react";
 
 const arr = [
@@ -42,10 +42,10 @@ export default function Home() {
           <>
             <motion.div
               initial={{ opacity: 0, y: 30 }}
-              // animate={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7 }}
-              className="rounded-md"
+              className="rounded-md relative"
             >
               <Image
                 src={item.imgurl}
@@ -53,8 +53,15 @@ export default function Home() {
                 height={1080}
                 className="w-full h-auto mb-3 rounded-md cursor-zoom-in"
                 alt={index}
+                draggable={false}
                 key={index}
               />
+              {/* buttons */}
+              <a href={item.imgurl} download={item.id}>
+                <span className="absolute top-4 right-4 p-3 rounded-full text-white cursor-pointer bg-rose-800">
+                  <DownloadIcon size={27} />
+                </span>
+              </a>
             </motion.div>
           </>
         ))}

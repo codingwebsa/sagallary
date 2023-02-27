@@ -3,7 +3,10 @@ import {
   BiHome as HomeIcon,
   BiUser as UserIcon,
   BiPlus as PlusIcon,
+  BiCloudDownload as DownloadIcon,
+  BiCloudUpload as UploadIcon,
 } from "react-icons/bi";
+
 const Bridge = () => (
   <svg
     aria-labelledby="conf-city-title"
@@ -129,4 +132,12 @@ const Bridge = () => (
   </svg>
 );
 
-export { MenuIcon, Bridge, HomeIcon, UserIcon, PlusIcon };
+export {
+  MenuIcon,
+  Bridge,
+  HomeIcon,
+  UserIcon,
+  PlusIcon,
+  DownloadIcon,
+  UploadIcon,
+};
