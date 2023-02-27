@@ -37,3 +37,7 @@ body {
   background: grey;
   margin-bottom: 30px;
 }
+/* custom */
+#display {
+  transform: translate(-50%, -50%) !important;
+}

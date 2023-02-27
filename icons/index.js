@@ -1,5 +1,9 @@
 import { MdMenu as MenuIcon } from "react-icons/md";
-import { BiHome as HomeIcon, BiUser as UserIcon } from "react-icons/bi";
+import {
+  BiHome as HomeIcon,
+  BiUser as UserIcon,
+  BiPlus as PlusIcon,
+} from "react-icons/bi";
 const Bridge = () => (
   <svg
     aria-labelledby="conf-city-title"
@@ -125,4 +129,4 @@ const Bridge = () => (
   </svg>
 );
 
-export { MenuIcon, Bridge, HomeIcon, UserIcon };
+export { MenuIcon, Bridge, HomeIcon, UserIcon, PlusIcon };

@@ -3,23 +3,27 @@ import { getSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import Masonry from "react-masonry-css";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 
 const arr = [
-  { imgurl: "/images/1.jpg" },
-  { imgurl: "/images/2.png" },
-  { imgurl: "/images/3.jpg" },
-  { imgurl: "/images/4.png" },
-  { imgurl: "/images/5.jpg" },
-  { imgurl: "/images/6.png" },
-  { imgurl: "/images/7.jpg" },
-  { imgurl: "/images/8.png" },
-  { imgurl: "/images/9.jpg" },
-  { imgurl: "/images/10.jpg" },
-  { imgurl: "/images/11.jpg" },
-  { imgurl: "/images/12.jpg" },
+  { id: 1, imgurl: "/images/1.jpg" },
+  { id: 2, imgurl: "/images/2.png" },
+  { id: 3, imgurl: "/images/3.jpg" },
+  { id: 4, imgurl: "/images/4.png" },
+  { id: 5, imgurl: "/images/5.jpg" },
+  { id: 6, imgurl: "/images/6.png" },
+  { id: 7, imgurl: "/images/7.jpg" },
+  { id: 8, imgurl: "/images/8.png" },
+  { id: 9, imgurl: "/images/9.jpg" },
+  { id: 10, imgurl: "/images/10.jpg" },
+  { id: 11, imgurl: "/images/11.jpg" },
+  { id: 12, imgurl: "/images/12.jpg" },
 ];
 
 export default function Home() {
+  const [selectedId, setSelectedId] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
   const breakpointColumnsObj = {
     default: 3,
     1100: 3,
@@ -36,14 +40,22 @@ export default function Home() {
         <CodingwebsaGiftCard />
         {arr.map((item, index) => (
           <>
-            <Image
-              src={item.imgurl}
-              width={720}
-              height={1080}
-              className="w-full h-auto mb-3 rounded-md"
-              alt={index}
-              key={index}
-            />
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              // animate={{ opacity: 1, y: 0 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+              className="rounded-md"
+            >
+              <Image
+                src={item.imgurl}
+                width={720}
+                height={1080}
+                className="w-full h-auto mb-3 rounded-md cursor-zoom-in"
+                alt={index}
+                key={index}
+              />
+            </motion.div>
           </>
         ))}
       </Masonry>
@@ -53,7 +65,7 @@ export default function Home() {
 
 const CodingwebsaGiftCard = () => (
   <>
-    <div>
+    <div className="rounded-md">
       <div className="after:content relative mb-5 flex h-[629px] flex-col items-center justify-end gap-4 overflow-hidden rounded-lg px-6 pb-16 pt-64 text-center text-white shadow-highlight after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight lg:pt-0 bg-[#111111]">
         <div className="absolute inset-0 flex items-center justify-center opacity-20">
           <span className="flex max-h-full max-w-full items-center justify-center text-white">
