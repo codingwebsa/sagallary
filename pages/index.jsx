@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Masonry from "react-masonry-css";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { db } from "@/lib/firebase/admin";
 
 const arr = [
   { id: 1, imgurl: "/images/1.jpg" },
@@ -21,15 +21,15 @@ const arr = [
   { id: 12, imgurl: "/images/12.jpg" },
 ];
 
-export default function Home() {
-  const [selectedId, setSelectedId] = useState(null);
-  const [selectedItem, setSelectedItem] = useState(null);
+export default function Home({ data }) {
   const breakpointColumnsObj = {
     default: 3,
     1100: 3,
     700: 4,
     500: 1,
   };
+
+  console.log(data);
   return (
     <>
       <Masonry
@@ -38,7 +38,7 @@ export default function Home() {
         columnClassName="my-masonry-grid_column"
       >
         <CodingwebsaGiftCard />
-        {arr.map((item, index) => (
+        {data.map((item, index) => (
           <>
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -52,12 +52,12 @@ export default function Home() {
                 width={720}
                 height={1080}
                 className="w-full h-auto mb-3 rounded-md cursor-zoom-in"
-                alt={index}
+                alt={item.title}
                 draggable={false}
-                key={index}
+                key={item.id}
               />
               {/* buttons */}
-              <a href={item.imgurl} download={item.id}>
+              <a href={item.imgurl} download={item.title}>
                 <span className="absolute top-4 right-4 p-3 rounded-full text-white cursor-pointer bg-rose-800">
                   <DownloadIcon size={27} />
                 </span>
@@ -114,7 +114,25 @@ export async function getServerSideProps(ctx) {
       },
     };
   }
+
+  // db
+  let docs;
+  const data = await db
+    .collection("post")
+    .get()
+    .then((querySnapshot) => {
+      var _temp = [];
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        // console.log(doc.id, " => ", doc.data());
+        _temp.push({ ...doc.data(), id: doc.id });
+      });
+      docs = _temp;
+    });
+
   return {
-    props: {},
+    props: {
+      data: docs,
+    },
   };
 }

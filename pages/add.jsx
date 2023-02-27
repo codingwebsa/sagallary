@@ -10,20 +10,21 @@ const Add = () => {
     if (!file) return;
     console.log(file);
 
-    // const formdata = new FormData();
+    const formdata = new FormData();
 
-    // formdata.append("file", file);
+    formdata.append("file", file);
+    formdata.append("upload_preset", "vpxqc8bq");
+    formdata.append("cloud_name", "dsvxr15fj");
 
-    // const data = await fetch(
-    //   "https://api.cloudnary.com/v1_1/dsvxr15fj/image/upload",
-    //   {
-    //     method: "POST",
-    //     body: formdata,
-    //     headers: { "Content-Type": "application/json" },
-    //   }
-    // ).then((r) => r.json());
+    const data = await fetch(
+      "https://api.cloudinary.com/v1_1/dsvxr15fj/image/upload",
+      {
+        method: "POST",
+        body: formdata,
+      }
+    ).then((r) => r.json());
 
-    // console.log(data);
+    console.log(data);
   }
   return (
     <>
