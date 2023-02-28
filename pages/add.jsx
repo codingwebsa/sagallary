@@ -1,7 +1,7 @@
 import { CrossIcon, UploadIcon } from "@/icons";
 import { useRef, useState } from "react";
 import { Switch } from "@headlessui/react";
-import { addDoc } from "firebase/firestore";
+import { addDoc, serverTimestamp } from "firebase/firestore";
 import { postsCollection } from "@/lib/firebase";
 import { getSession } from "next-auth/react";
 import { Triangle } from "react-loader-spinner";
@@ -84,6 +84,7 @@ const Add = ({ session }) => {
         authorEmail: session.user.email,
         authorName: session.user.name,
         authorImage: session.user.image,
+        timestamp: serverTimestamp(),
       });
       console.log("done!! 🚀");
     } catch {}

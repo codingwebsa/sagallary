@@ -4,39 +4,52 @@ import Image from "next/image";
 import Link from "next/link";
 import Masonry from "react-masonry-css";
 import { motion } from "framer-motion";
-import { db } from "@/lib/firebase/admin";
+import useSWR from "swr";
+import { Triangle } from "react-loader-spinner";
+import { useEffect, useState } from "react";
 
-const arr = [
-  { id: 1, imgurl: "/images/1.jpg" },
-  { id: 2, imgurl: "/images/2.png" },
-  { id: 3, imgurl: "/images/3.jpg" },
-  { id: 4, imgurl: "/images/4.png" },
-  { id: 5, imgurl: "/images/5.jpg" },
-  { id: 6, imgurl: "/images/6.png" },
-  { id: 7, imgurl: "/images/7.jpg" },
-  { id: 8, imgurl: "/images/8.png" },
-  { id: 9, imgurl: "/images/9.jpg" },
-  { id: 10, imgurl: "/images/10.jpg" },
-  { id: 11, imgurl: "/images/11.jpg" },
-  { id: 12, imgurl: "/images/12.jpg" },
-];
+export default function Home() {
+  const [posts, setPosts] = useState(null);
 
-export default function Home({ data }) {
+  const fetcher = (...args) => fetch(...args).then((res) => res.json());
+
+  const { data, error, isLoading } = useSWR("/api/posts", fetcher);
+
   const breakpointColumnsObj = {
     default: 3,
     1100: 3,
     700: 4,
     500: 1,
   };
+
+  useEffect(() => {
+    setPosts(data);
+  }, [data]);
+
   return (
     <>
+      {isLoading && (
+        <>
+          <div className="fixed inset-0 bg-white/80 grid place-content-center z-[99999]">
+            <Triangle
+              height="160"
+              width="160"
+              color="rgb(79 70 229)"
+              ariaLabel="triangle-loading"
+              wrapperStyle={{}}
+              wrapperClassName=""
+              visible={true}
+            />
+          </div>
+        </>
+      )}
       <Masonry
         breakpointCols={breakpointColumnsObj}
         className="my-masonry-grid w-full"
         columnClassName="my-masonry-grid_column"
       >
         <CodingwebsaGiftCard />
-        {data.map((item, index) => (
+        {posts?.map((item, index) => (
           <>
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -113,24 +126,7 @@ export async function getServerSideProps(ctx) {
     };
   }
 
-  // db
-  let docs;
-  const data = await db
-    .collection("posts")
-    .get()
-    .then((querySnapshot) => {
-      var _temp = [];
-      querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        // console.log(doc.id, " => ", doc.data());
-        _temp.push({ ...doc.data(), id: doc.id });
-      });
-      docs = _temp;
-    });
-
   return {
-    props: {
-      data: docs,
-    },
+    props: {},
   };
 }
