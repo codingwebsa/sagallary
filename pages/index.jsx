@@ -28,8 +28,6 @@ export default function Home({ data }) {
     700: 4,
     500: 1,
   };
-
-  console.log(data);
   return (
     <>
       <Masonry
@@ -48,7 +46,7 @@ export default function Home({ data }) {
               className="rounded-md relative"
             >
               <Image
-                src={item.imgurl}
+                src={item.imageurl}
                 width={720}
                 height={1080}
                 className="w-full h-auto mb-3 rounded-md cursor-zoom-in"
@@ -118,7 +116,7 @@ export async function getServerSideProps(ctx) {
   // db
   let docs;
   const data = await db
-    .collection("post")
+    .collection("posts")
     .get()
     .then((querySnapshot) => {
       var _temp = [];

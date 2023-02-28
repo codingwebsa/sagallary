@@ -6,6 +6,7 @@ import {
   BiCloudDownload as DownloadIcon,
   BiCloudUpload as UploadIcon,
 } from "react-icons/bi";
+import { RxCross2 as CrossIcon } from "react-icons/rx";
 
 const Bridge = () => (
   <svg
@@ -140,4 +141,5 @@ export {
   PlusIcon,
   DownloadIcon,
   UploadIcon,
+  CrossIcon,
 };
