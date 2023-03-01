@@ -53,7 +53,7 @@ const Add = ({ session }) => {
 
     const _title = formRef.current.title.value || "";
     const _tags = formRef.current.tags.value || "";
-    const _public = enabled || true;
+    const _public = enabled;
 
     // upload image
     const formdata = new FormData();
@@ -117,7 +117,10 @@ const Add = ({ session }) => {
             <div className="relative">
               <img src={localImage} className="rounded-md w-full" alt="" />
               <button
-                onClick={() => setLocalImage(null)}
+                onClick={() => {
+                  setLocalImage(null);
+                  setFile(null);
+                }}
                 className="bg-white p-3 rounded-full absolute top-4 right-4"
               >
                 <CrossIcon size={20} className="text-black" />

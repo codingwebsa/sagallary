@@ -1,4 +1,4 @@
-import { Bridge, DownloadIcon } from "@/icons";
+import { Bridge, DeleteIcon, DownloadIcon } from "@/icons";
 import { getSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,42 +7,65 @@ import { motion } from "framer-motion";
 import useSWR from "swr";
 import { Triangle } from "react-loader-spinner";
 import { useEffect, useState } from "react";
+import downloadPhoto from "@/utils/downloadPhotos";
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
-export default function Home() {
+const breakpointColumnsObj = {
+  default: 3,
+  1100: 3,
+  700: 2,
+  500: 1,
+};
+
+export default function Home({ session }) {
   const [posts, setPosts] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
   const { data, error, isLoading } = useSWR("/api/posts", fetcher);
 
-  const breakpointColumnsObj = {
-    default: 3,
-    1100: 3,
-    700: 4,
-    500: 1,
-  };
+  async function handleDelete(id) {
+    const a = confirm("Do you want to delete this post? 🧨");
+    if (!a) return;
+
+    try {
+      setLoading(true);
+      await deleteDoc(doc(db, "posts", id));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    setPosts(data);
+    const _temp = data?.filter((item) => {
+      // console.log(item);
+      return item.public;
+    });
+    setPosts(_temp);
   }, [data]);
 
   return (
     <>
-      {isLoading && (
-        <>
-          <div className="fixed inset-0 bg-white/80 grid place-content-center z-[99999]">
-            <Triangle
-              height="160"
-              width="160"
-              color="rgb(79 70 229)"
-              ariaLabel="triangle-loading"
-              wrapperStyle={{}}
-              wrapperClassName=""
-              visible={true}
-            />
-          </div>
-        </>
-      )}
+      {isLoading ||
+        (loading && (
+          <>
+            <div className="fixed inset-0 bg-white/80 grid place-content-center z-[99999]">
+              <Triangle
+                height="160"
+                width="160"
+                color="rgb(79 70 229)"
+                ariaLabel="triangle-loading"
+                wrapperStyle={{}}
+                wrapperClassName=""
+                visible={true}
+              />
+            </div>
+          </>
+        ))}
       <Masonry
         breakpointCols={breakpointColumnsObj}
         className="my-masonry-grid w-full"
@@ -52,11 +75,12 @@ export default function Home() {
         {posts?.map((item, index) => (
           <>
             <motion.div
+              key={item.id}
               initial={{ opacity: 0, y: 30 }}
               viewport={{ once: true }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7 }}
-              className="rounded-md relative"
+              className="custom-post-com rounded-md relative"
             >
               <Image
                 src={item.imageurl}
@@ -65,14 +89,33 @@ export default function Home() {
                 className="w-full h-auto mb-3 rounded-md cursor-zoom-in"
                 alt={item.title}
                 draggable={false}
-                key={item.id}
               />
-              {/* buttons */}
-              <a href={item.imgurl} download={item.title}>
-                <span className="absolute top-4 right-4 p-3 rounded-full text-white cursor-pointer bg-rose-800">
-                  <DownloadIcon size={27} />
-                </span>
-              </a>
+
+              {/* download button*/}
+              <button
+                onClick={() => downloadPhoto(item.imageurl, item.title)}
+                className="custom-button transition-opacity duration-300 absolute top-4 right-4 p-3 rounded-full text-white cursor-pointer bg-sky-700"
+              >
+                <DownloadIcon size={20} />
+              </button>
+              {item.authorEmail == session.user.email && (
+                <button
+                  onClick={() => handleDelete(item.id)}
+                  className="custom-button transition-opacity duration-300 absolute top-16 right-4 p-3 rounded-full text-white cursor-pointer bg-rose-800"
+                >
+                  <DeleteIcon size={20} />
+                </button>
+              )}
+              {/* author image */}
+              <span className="absolute bottom-3 left-3 p-1 bg-white/40 rounded-full">
+                <Image
+                  src={item.authorImage}
+                  width={30}
+                  height={30}
+                  className="rounded-full"
+                  alt={item.authorName}
+                />
+              </span>
             </motion.div>
           </>
         ))}
@@ -127,6 +170,8 @@ export async function getServerSideProps(ctx) {
   }
 
   return {
-    props: {},
+    props: {
+      session: session,
+    },
   };
 }

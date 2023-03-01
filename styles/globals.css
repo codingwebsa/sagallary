@@ -18,6 +18,13 @@ body {
   overflow-x: hidden;
   overscroll-behavior-y: contain;
 }
+/* custom  */
+.custom-post-com:hover .custom-button {
+  opacity: 20%;
+}
+.custom-button:hover {
+  opacity: 100% !important;
+}
 
 /* masonry */
 .my-masonry-grid {
