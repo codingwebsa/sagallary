@@ -8,6 +8,8 @@ import { Triangle } from "react-loader-spinner";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 const breakpointColumnsObj = {
   default: 3,
@@ -24,6 +26,20 @@ const Account = () => {
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
   const { data, error, isLoading } = useSWR("/api/posts", fetcher);
+
+  async function handleDelete(id) {
+    const a = confirm("Do you want to delete this post? 🧨");
+    if (!a) return;
+
+    try {
+      setLoading(true);
+      await deleteDoc(doc(db, "posts", id));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
     if (session) {
@@ -88,14 +104,13 @@ const Account = () => {
                     >
                       <DownloadIcon size={20} />
                     </button>
-                    {item.authorEmail == session.user.email && (
-                      <button
-                        onClick={() => handleDelete(item.id)}
-                        className="custom-button transition-opacity duration-300 absolute top-16 right-4 p-3 rounded-full text-white cursor-pointer bg-rose-800"
-                      >
-                        <DeleteIcon size={20} />
-                      </button>
-                    )}
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      className="custom-button transition-opacity duration-300 absolute top-16 right-4 p-3 rounded-full text-white cursor-pointer bg-rose-800"
+                    >
+                      <DeleteIcon size={20} />
+                    </button>
+
                     {/* author image */}
                     <span className="absolute bottom-3 left-3 p-1 bg-white/40 rounded-full">
                       <Image
