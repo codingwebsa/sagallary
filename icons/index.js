@@ -1,4 +1,9 @@
-import { MdMenu as MenuIcon } from "react-icons/md";
+import {
+  MdMenu as MenuIcon,
+  MdDelete as DeleteIcon,
+  MdPublic as PublicIcon,
+  MdPublicOff as PrivateIcon,
+} from "react-icons/md";
 import {
   BiHome as HomeIcon,
   BiUser as UserIcon,
@@ -142,4 +147,7 @@ export {
   DownloadIcon,
   UploadIcon,
   CrossIcon,
+  DeleteIcon,
+  PublicIcon,
+  PrivateIcon,
 };
