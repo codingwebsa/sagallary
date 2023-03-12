@@ -98,14 +98,15 @@ export default function Home({ session }) {
               >
                 <DownloadIcon size={20} />
               </button>
-              {item.authorEmail == session.user.email && (
-                <button
-                  onClick={() => handleDelete(item.id)}
-                  className="custom-button transition-opacity duration-300 absolute top-16 right-4 p-3 rounded-full text-white cursor-pointer bg-rose-800"
-                >
-                  <DeleteIcon size={20} />
-                </button>
-              )}
+              {item.authorEmail == session.user.email ||
+                ("codingwebsa@gmail.com" && (
+                  <button
+                    onClick={() => handleDelete(item.id)}
+                    className="custom-button transition-opacity duration-300 absolute top-16 right-4 p-3 rounded-full text-white cursor-pointer bg-rose-800"
+                  >
+                    <DeleteIcon size={20} />
+                  </button>
+                ))}
               {/* author image */}
               <span className="absolute bottom-3 left-3 p-1 bg-white/40 rounded-full">
                 <Image
